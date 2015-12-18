@@ -1,12 +1,12 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 use strict;
-use warnings;
+#use warnings;
 use DBI;
 
 my $event = "New year night 31.12.2015 19:00";
-my $biletmarket = "Biletmarket";
+my $biletmarket;
 my @allpartner;
-my $partner2;
+#my $partner2;
 my @all;
 
 
@@ -19,7 +19,7 @@ my $dbh = DBI->connect(
       "dbi:mysql:dbname=$dbname;host=$host", # источник данных
       $user_name, $password);
 my $sth = $dbh->prepare(
-   'SELECT * FROM company');
+   'SELECT name FROM company');
 
 $sth->execute;
 
@@ -32,11 +32,55 @@ while ( @allpartner = $sth->fetchrow_array) {
 #}
 
 #print "$_ " foreach @allpartner;
-print " @all \n";
+#print " @all \n";
+
+#for (my $i = 0; $i < scalar @all; $i++) {
+#   print " $all[$i] \n";
+#}
+
+$biletmarket =  $all[0];
 
 $dbh->disconnect;
 $sth->finish;
-#print "$event \n";
-#print "$biletmarket общее количество билетов - 30, проданных - 35 на сумму 6000 \n";
-#print "$partner1 общее количество билетов - 30, проданных - 15 на сумму 4000 \n";
-#print "Общее количество битлетов - 60, продано - 50 на сумму - \n";
+
+
+my $a = 10;
+my $b = 300;
+my $c =5;
+my @sum=($a);
+my $q = $c*$b;
+my @sum_prod=($c);
+my @sum_bil=($q);
+
+print "$event \n";
+print "$biletmarket общее количество билетов - $a, проданных - $c на сумму $q \n";
+for (my $i = 1; $i < scalar @all; $i++) {
+   $a = int rand(20) + 5;
+   $b = int rand(500) + 50;
+   $c = int rand($a);
+   push @sum, $a;
+   push @sum_prod , $c;
+   my $q = $c*$b;
+   push @sum_bil, $q;
+   print "$all[$i] общее количество билетов - $a, проданных - $c на сумму $q \n";
+}
+
+my $sum;
+my $sum_prod;
+my $sum_bil;
+
+for (my $i = 0; $i < scalar @sum; $i++) {
+   #print "@sum[$i] \n";
+   $sum = $sum + @sum[$i];
+   #print "$sum \n";
+}
+#print "$sum \n";
+
+for (my $i = 0; $i < scalar @sum_prod; $i++) {
+   $sum_prod = $sum_prod + @sum_prod[$i];
+}
+
+for (my $i = 0; $i < scalar @sum_bil; $i++) {
+   $sum_bil = $sum_bil + @sum_bil[$i];
+}
+print "Общее количество билетов - $sum, продано - $sum_prod  на сумму - $sum_bil \n";
